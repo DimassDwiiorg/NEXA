@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXALabs | Access Gateway</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="login-page">
+
+    <div class="bg-glow"></div>
+
+    <div class="login-wrapper">
+        <div class="login-card" id="login-box">
+            <h2>NEXA<span>LOGIN</span></h2>
+            <p>Silakan masuk untuk mengakses Nova AI Core</p>
+            <div id="login-error" class="login-error-msg"></div>
+            
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="login-username" placeholder="Masukkan username" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="Masukkan password">
+            </div>
+            <button id="login-btn" class="btn-primary" style="width: 100%; margin-top: 10px;">Access System</button>
+            
+            <p style="margin-top: 20px; font-size: 0.85rem; color: #8f9bb7;">
+                Belum punya akun? <a href="#" id="go-to-register" style="color: #00f0ff; text-decoration: none; font-weight: 600;">Buat Akun Baru</a>
+            </p>
+        </div>
+
+        <div class="login-card" id="register-box" style="display: none;">
+            <h2>NEXA<span>REGISTER</span></h2>
+            <p>Buat akun baru kamu secara instan</p>
+            <div id="register-msg" class="login-error-msg" style="background: rgba(0, 240, 255, 0.1); color: #00f0ff; border-color: rgba(0, 240, 255, 0.3);"></div>
+            
+            <div class="input-group">
+                <label>Buat Username</label>
+                <input type="text" id="reg-username" placeholder="Username baru" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Buat Password</label>
+                <input type="password" id="reg-password" placeholder="Password baru">
+            </div>
+            <button id="register-btn" class="btn-primary" style="width: 100%; margin-top: 10px; background: linear-gradient(135deg, #9d4edd, #0072ff);">Daftar Sekarang</button>
+            
+            <p style="margin-top: 20px; font-size: 0.85rem; color: #8f9bb7;">
+                Sudah punya akun? <a href="#" id="go-to-login" style="color: #00f0ff; text-decoration: none; font-weight: 600;">Kembali Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. NAVIGASI PERPINDAHAN FORM ---
+        const loginBox = document.getElementById("login-box");
+        const registerBox = document.getElementById("register-box");
+
+        document.getElementById("go-to-register").addEventListener("click", (e) => {
+            e.preventDefault();
+            loginBox.style.display = "none";
+            registerBox.style.display = "block";
+            document.getElementById("register-msg").style.display = "none";
+        });
+
+        document.getElementById("go-to-login").addEventListener("click", (e) => {
+            e.preventDefault();
+            registerBox.style.display = "none";
+            loginBox.style.display = "block";
+            document.getElementById("login-error").style.display = "none";
+        });
+
+
+        // --- 2. LOGIKA PENDAFTARAN (REGISTER) ---
+        document.getElementById("register-btn").addEventListener("click", handleRegister);
+
+        function handleRegister() {
+            const regUser = document.getElementById("reg-username").value.trim();
+            const regPass = document.getElementById("reg-password").value;
+            const regMsg = document.getElementById("register-msg");
+
+            if (regUser === "" || regPass === "") {
+                regMsg.style.backgroundColor = "rgba(255, 77, 77, 0.1)";
+                regMsg.style.color = "#ff4d4d";
+                regMsg.textContent = "Username dan Password tidak boleh kosong!";
+                regMsg.style.display = "block";
+                return;
+            }
+
+            // Cek apakah username sudah pernah terdaftar sebelumnya
+            if (localStorage.getItem("user_" + regUser)) {
+                regMsg.style.backgroundColor = "rgba(255, 77, 77, 0.1)";
+                regMsg.style.color = "#ff4d4d";
+                regMsg.textContent = "Username sudah digunakan! Cari nama lain.";
+                regMsg.style.display = "block";
+                return;
+            }
+
+            // Simpan akun baru ke memori browser
+            localStorage.setItem("user_" + regUser, regPass);
+
+            // Beri tahu sukses
+            regMsg.style.backgroundColor = "rgba(0, 240, 255, 0.1)";
+            regMsg.style.color = "#00f0ff";
+            regMsg.textContent = "Akun berhasil dibuat! Silakan kembali login.";
+            regMsg.style.display = "block";
+
+            // Kosongkan form input pendaftaran
+            document.getElementById("reg-username").value = "";
+            document.getElementById("reg-password").value = "";
+        }
+
+
+        // --- 3. LOGIKA MASUK (LOGIN) ---
+        document.getElementById("login-btn").addEventListener("click", handleLogin);
+        document.getElementById("login-password").addEventListener("keypress", (e) => {
+            if (e.key === "Enter") handleLogin();
+        });
+
+        function handleLogin() {
+            const userInp = document.getElementById("login-username").value.trim();
+            const passInp = document.getElementById("login-password").value;
+            const loginError = document.getElementById("login-error");
+
+            // Akun admin bawaan cadangan tetap aktif
+            const ADMIN_USER = "admin";
+            const ADMIN_PASS = "nova123";
+
+            // Ambil password terdaftar dari database lokal browser
+            const savedPassword = localStorage.getItem("user_" + userInp);
+
+            if ((userInp === ADMIN_USER && passInp === ADMIN_PASS) || (savedPassword && savedPassword === passInp)) {
+                // Set tanda sukses login
+                localStorage.setItem("isLoggedIn", "true");
+                // Lempar ke halaman AI utama
+                window.location.href = "index.html";
+            } else {
+                loginError.textContent = "Username atau Password salah!";
+                loginError.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

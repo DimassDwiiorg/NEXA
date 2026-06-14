@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        // PROTEKSI: Cek apakah user sudah login, jika belum langsung tendang ke halaman login
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+            window.location.href = "login.html";
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXALabs | Nova AI Core</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">NEXA<span>LABS</span></a>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#ai-chat">Nova AI</a></li>
+                <li><a href="#features">Features</a></li>
+            </ul>
+            <button class="btn-primary" id="logout-btn">Log Out</button>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <div class="badge">✦ NOVA AI INTEGRATED</div>
+            <h1>Interact with <br><span class="text-gradient">Nova Intelligence</span></h1>
+            <p>Tanyakan apa saja langsung di bawah ini. Website ini terhubung langsung ke Nova AI Core secara responsif dan tanpa delay.</p>
+            
+            <div id="ai-chat" class="chat-container">
+                <div class="chat-box" id="chat-box">
+                    <div class="message ai-message">Halo! Saya Nova AI. Ada yang bisa saya bantu hari ini?</div>
+                </div>
+                <div class="input-container">
+                    <input type="text" id="user-input" placeholder="Ketik pertanyaanmu di sini..." autocomplete="off">
+                    <button id="send-btn">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="section-header">
+            <h2>Supercharged Features</h2>
+            <p>Fitur masa depan yang didukung konektivitas API tingkat tinggi.</p>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">⚡</div>
+                <h3>Live API Sync</h3>
+                <p>Koneksi langsung ke server Nova AI menghasilkan jawaban instan tanpa membebani server hosting milikmu.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔮</div>
+                <h3>Neural Core</h3>
+                <p>Algoritma pintar yang memproses perintah teks rumit menjadi informasi yang mudah dipahami.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🛡️</div>
+                <h3>Secure Client</h3>
+                <p>Proses *fetching* data dilakukan dari sisi *client* secara aman, rapi, dan dijamin 100% bebas *crash*.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 NEXALabs. Powered by Nova AI API.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
