@@ -3,7 +3,7 @@ document.getElementById("logout-btn").addEventListener("click", () => {
     // Hapus sesi login dari browser
     localStorage.removeItem("isLoggedIn");
     // Alihkan paksa kembali ke halaman login.html
-    window.location.href = "login.html";
+    window.location.href = "index.html";
 });
 
 // LOGIKA UTAMA CHATBOT (NOVA AI INTEGRATION)
