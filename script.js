@@ -40,7 +40,7 @@ async function sendMessage() {
 
     // 3. Ambil data dari API
     try {
-        const apiUrl = `https://api.epand.my.id/api/ai/nova?text=${encodeURIComponent(messageText)}`;
+        const apiUrl = `https://starlabs.biz.id/api/opus-4.8.php?teks=${encodeURIComponent(messageText)}`;
         const response = await fetch(apiUrl);
         
         if (!response.ok) {
