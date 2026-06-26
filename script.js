@@ -56,7 +56,8 @@ async function sendMessage() {
         aiMessageDiv.className = 'message ai-message';
         
         // Membaca respon API dengan aman agar tidak keluar [object Object]
-        if (data) {
+if (data) {
+    // 1. Ambil teks mentah dari API sesuai struktur data yang masuk
     let rawText = '';
     if (typeof data.result === 'object' && data.result !== null) {
         rawText = data.result.message || JSON.stringify(data.result);
@@ -68,12 +69,25 @@ async function sendMessage() {
         rawText = typeof data === 'object' ? (data.text || JSON.stringify(data)) : data;
     }
     
-    // DI SINI KUNCINYA: Menggunakan innerHTML + parseMarkdown
-    aiMessageDiv.innerHTML = parseMarkdown(rawText);
+    // 2. Proses teks mentah tersebut menjadi HTML (Solusi 1)
+    let formattedHtml = rawText;
+    
+    // Ubah ## Judul menjadi heading kecil
+    formattedHtml = formattedHtml.replace(/^##\s+(.*)$/gmq, '<strong>$1</strong><br>');
+    formattedHtml = formattedHtml.replace(/^#\s+(.*)$/gmq, '<strong>$1</strong><br>');
+    
+    // Ubah **teks** menjadi Bold
+    formattedHtml = formattedHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Ubah baris baru (\n) menjadi <br> agar tidak menumpuk dalam satu baris
+    formattedHtml = formattedHtml.replace(/\n/g, '<br>');
+    
+    // 3. Masukkan hasil format ke elemen chatbox menggunakan innerHTML
+    aiMessageDiv.innerHTML = formattedHtml;
+
 } else {
     aiMessageDiv.textContent = 'Maaf, tidak ada respon dari sistem.';
 }
-
         
         chatBox.appendChild(aiMessageDiv);
 
