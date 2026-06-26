@@ -57,18 +57,23 @@ async function sendMessage() {
         
         // Membaca respon API dengan aman agar tidak keluar [object Object]
         if (data) {
-            if (typeof data.result === 'object' && data.result !== null) {
-                aiMessageDiv.textContent = data.result.text || data.result.message || JSON.stringify(data.result);
-            } else if (data.result) {
-                aiMessageDiv.textContent = data.result;
-            } else if (data.response) {
-                aiMessageDiv.textContent = data.response;
-            } else {
-                aiMessageDiv.textContent = typeof data === 'object' ? (data.text || JSON.stringify(data)) : data;
-            }
-        } else {
-            aiMessageDiv.textContent = 'Maaf, tidak ada respon dari sistem.';
-        }
+    let rawText = '';
+    if (typeof data.result === 'object' && data.result !== null) {
+        rawText = data.result.message || JSON.stringify(data.result);
+    } else if (data.result) {
+        rawText = data.result;
+    } else if (data.response) {
+        rawText = data.response;
+    } else {
+        rawText = typeof data === 'object' ? (data.text || JSON.stringify(data)) : data;
+    }
+    
+    // DI SINI KUNCINYA: Menggunakan innerHTML + parseMarkdown
+    aiMessageDiv.innerHTML = parseMarkdown(rawText);
+} else {
+    aiMessageDiv.textContent = 'Maaf, tidak ada respon dari sistem.';
+}
+
         
         chatBox.appendChild(aiMessageDiv);
 
@@ -86,3 +91,25 @@ async function sendMessage() {
 
     chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+function parseMarkdown(text) {
+    if (!text) return '';
+    
+    let html = text;
+    
+    // 1. Bersihkan duplikasi teks judul jika ada (seperti "Testis Testis")
+    html = html.replace(/(#+)\s*([A-Za-z0-9]+)\s+\2/g, '$1 $2');
+
+    // 2. Ubah Main Headings (# Judul) dan Sub Headings (## Sub) menjadi tag HTML bodi tebal/terpisah
+    html = html.replace(/^#\s+(.*)$/gmq, '<h3>$1</h3>');
+    html = html.replace(/^##\s+(.*)$/gmq, '<h4>$1</h4>');
+    
+    // 3. Ubah **teks** menjadi <strong>teks</strong> (tulisan tebal)
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // 4. Ubah baris baru (\n) menjadi <br> agar text berparagraf rapi
+    html = html.replace(/\n/g, '<br>');
+    
+    return html;
+                        }
+
