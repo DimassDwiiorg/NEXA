@@ -57,7 +57,7 @@ async function sendMessage() {
         
         // Membaca respon API dengan aman agar tidak keluar [object Object]
 if (data) {
-    // 1. Ambil teks mentah dari API sesuai struktur data yang masuk
+    // 1. Ambil teks mentah dari API
     let rawText = '';
     if (typeof data.result === 'object' && data.result !== null) {
         rawText = data.result.message || JSON.stringify(data.result);
@@ -69,25 +69,26 @@ if (data) {
         rawText = typeof data === 'object' ? (data.text || JSON.stringify(data)) : data;
     }
     
-    // 2. Proses teks mentah tersebut menjadi HTML (Solusi 1)
+    // 2. Format Markdown Sederhana (Regex yang sudah diperbaiki)
     let formattedHtml = rawText;
     
-    // Ubah ## Judul menjadi heading kecil
-    formattedHtml = formattedHtml.replace(/^##\s+(.*)$/gmq, '<strong>$1</strong><br>');
-    formattedHtml = formattedHtml.replace(/^#\s+(.*)$/gmq, '<strong>$1</strong><br>');
-    
-    // Ubah **teks** menjadi Bold
+    // Ubah **teks** menjadi Bold <strong>
     formattedHtml = formattedHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     
-    // Ubah baris baru (\n) menjadi <br> agar tidak menumpuk dalam satu baris
+    // Ubah tanda # di awal baris menjadi teks tebal + baris baru
+    formattedHtml = formattedHtml.replace(/^#\s+(.*)$/gm, '<strong>$1</strong><br>');
+    formattedHtml = formattedHtml.replace(/^##\s+(.*)$/gm, '<strong>$1</strong><br>');
+    
+    // Ubah enter (\n) menjadi <br> agar tidak menumpuk
     formattedHtml = formattedHtml.replace(/\n/g, '<br>');
     
-    // 3. Masukkan hasil format ke elemen chatbox menggunakan innerHTML
+    // 3. Masukkan ke elemen chatbox
     aiMessageDiv.innerHTML = formattedHtml;
 
 } else {
     aiMessageDiv.textContent = 'Maaf, tidak ada respon dari sistem.';
 }
+
         
         chatBox.appendChild(aiMessageDiv);
 
